@@ -1,9 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:instagram_app/models/user.dart' as model;
 
 class AuthMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  Future<model.User> getUserDetails() async {
+    User currentUser = _firebaseAuth.currentUser!;
+
+    DocumentSnapshot snap =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+    return model.User.fromSnap(snap);
+  }
 
   Future<String> signUpUser({
     required String email,
@@ -22,14 +31,20 @@ class AuthMethods {
         UserCredential cred = await _firebaseAuth
             .createUserWithEmailAndPassword(email: email, password: password);
 
-        await _firestore.collection("users").doc(cred.user!.uid).set({
-          "email": email,
-          "uid": cred.user!.uid,
-          "username": username,
-          'bio': bio,
-          'followers': [],
-          'following': [],
-        });
+        model.User _user = model.User(
+          username: username,
+          uid: cred.user!.uid,
+          email: email,
+          bio: bio,
+          following: [],
+          followers: [],
+        );
+
+        await _firestore
+            .collection("users")
+            .doc(cred.user!.uid)
+            .set(_user.toJson());
+
         res = "success";
       } else {
         res = "please enter all the fields.";

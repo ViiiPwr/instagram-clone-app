@@ -6,6 +6,9 @@ import 'package:instagram_app/utils/utils.dart';
 import 'package:instagram_app/widgets/text_field_input.dart';
 
 import '../resources/auth_methods.dart';
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/responsive_layout_screen.dart';
+import '../responsive/web_screen_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -20,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -124,7 +126,11 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
     if (res == "success") {
-      //
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+                mobileScreenLayout: MobileScreenLayout(),
+                webScreenLayout: WebScreenLayout(),
+              )));
       setState(() {
         _isLoading = false;
       });

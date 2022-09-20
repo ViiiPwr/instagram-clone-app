@@ -9,6 +9,10 @@ import 'package:instagram_app/utils/colors.dart';
 import 'package:instagram_app/utils/utils.dart';
 import 'package:instagram_app/widgets/text_field_input.dart';
 
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/responsive_layout_screen.dart';
+import '../responsive/web_screen_layout.dart';
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
@@ -58,6 +62,11 @@ class _SignupScreenState extends State<SignupScreen> {
       setState(() {
         _isLoading = false;
       });
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+                mobileScreenLayout: MobileScreenLayout(),
+                webScreenLayout: WebScreenLayout(),
+              )));
     }
   }
 
