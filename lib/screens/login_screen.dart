@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram_app/utils/colors.dart';
+import 'package:instagram_app/utils/utils.dart';
 import 'package:instagram_app/widgets/text_field_input.dart';
+
+import '../resources/auth_methods.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -61,8 +65,13 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 24,
             ),
             InkWell(
+              onTap: loginUser,
               child: Container(
-                child: const Text('Log in'),
+                child: !_isLoading
+                    ? const Text('Log in')
+                    : const CircularProgressIndicator(
+                        color: primaryColor,
+                      ),
                 width: double.infinity,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -103,5 +112,26 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       )),
     );
+  }
+
+  Future<void> loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    if (res == "success") {
+      //
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      showSnackBar(res, context);
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }
