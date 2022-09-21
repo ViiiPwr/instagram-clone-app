@@ -1,8 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:instagram_app/providers/user_provider.dart';
+import 'package:instagram_app/resources/firestore_methods.dart';
 import 'package:instagram_app/utils/colors.dart';
+import 'package:instagram_app/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../models/user.dart' as model;
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -13,11 +19,13 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  bool isLikeAnimating = false;
   @override
   Widget build(BuildContext context) {
     final randomInt = Random().nextInt(1000);
     final randomInt2 = Random().nextInt(1000);
     final width = MediaQuery.of(context).size.width;
+    final model.User user = Provider.of<UserProvider>(context).getUser;
 
     return Container(
       decoration: BoxDecoration(
@@ -88,23 +96,64 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
           //IMAGE SEC
-          SizedBox(
-            height: width * 0.7,
-            width: double.infinity,
-            child: Image.network(
-              'http://picsum.photos/seed/$randomInt2/300/300',
-              fit: BoxFit.cover,
+          GestureDetector(
+            onDoubleTap: () {
+              FirestoreMethods().likePost(
+                  widget.snap['postId'], user.uid, widget.snap['likes']);
+              setState(() {
+                isLikeAnimating = true;
+              });
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  height: width * 0.7,
+                  width: double.infinity,
+                  child: Image.network(
+                    'http://picsum.photos/seed/$randomInt2/300/300',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                AnimatedOpacity(
+                  opacity: isLikeAnimating ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: LikeAnimation(
+                    isAnimating: isLikeAnimating,
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 100,
+                    ),
+                    duration: const Duration(milliseconds: 400),
+                    onEnd: () {
+                      setState(() {
+                        isLikeAnimating = false;
+                      });
+                    },
+                  ),
+                )
+              ],
             ),
           ),
           //LIKE COMMENT SEC
           Row(
             children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  )),
+              LikeAnimation(
+                isAnimating: widget.snap['likes'].contains(user.uid),
+                smallLike: true,
+                child: widget.snap['likes'].contains(user.uid)
+                    ? IconButton(
+                        onPressed: () => FirestoreMethods().likePost(
+                            widget.snap['postId'],
+                            user.uid,
+                            widget.snap['likes']),
+                        icon: const Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        ))
+                    : const Icon(Icons.favorite_border),
+              ),
               IconButton(
                   onPressed: () {},
                   icon: const Icon(
@@ -174,7 +223,8 @@ class _PostCardState extends State<PostCard> {
                   ),
                   Container(
                     child: Text(
-                      DateFormat.yMMMd()
+                      DateFormat.yMd()
+                          .add_jm()
                           .format(widget.snap['datePublished'].toDate()),
                       style: const TextStyle(color: secondaryColor),
                     ),

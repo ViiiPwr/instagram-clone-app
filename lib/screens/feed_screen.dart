@@ -44,14 +44,15 @@ class _FeedScreenState extends State<FeedScreen> {
             );
           }
           return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (ctx, index) => Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 0,
-                      vertical: 0,
-                    ),
-                    child: PostCard(snap: snapshot.data!.docs[index].data()),
-                  ));
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (ctx, index) => Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 0,
+                vertical: 0,
+              ),
+              child: PostCard(snap: snapshot.data!.docs[index].data()),
+            ),
+          );
         },
       ),
     );
