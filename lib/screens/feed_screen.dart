@@ -47,7 +47,7 @@ class _FeedScreenState extends State<FeedScreen> {
             );
           }
           return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
+            itemCount: (snapshot.data! as dynamic).docs.length,
             itemBuilder: (ctx, index) => Container(
               margin: const EdgeInsets.symmetric(
                 horizontal: 0,
