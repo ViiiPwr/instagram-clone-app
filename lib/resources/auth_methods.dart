@@ -31,6 +31,9 @@ class AuthMethods {
         UserCredential cred = await _firebaseAuth
             .createUserWithEmailAndPassword(email: email, password: password);
 
+        // String photoUrl =
+        // await StorageMethods().uploadImageToStorage('profilePics', file, false);
+
         model.User _user = model.User(
           username: username,
           uid: cred.user!.uid,

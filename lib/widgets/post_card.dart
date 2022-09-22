@@ -1,9 +1,12 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_app/providers/user_provider.dart';
 import 'package:instagram_app/resources/firestore_methods.dart';
+import 'package:instagram_app/screens/comments_screen.dart';
 import 'package:instagram_app/utils/colors.dart';
+import 'package:instagram_app/utils/utils.dart';
 import 'package:instagram_app/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +23,26 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLen = 0;
+  @override
+  void initState() {
+    super.initState();
+    fetchCommentLen();
+  }
+
+  fetchCommentLen() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      commentLen = snap.docs.length;
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final randomInt = Random().nextInt(1000);
@@ -155,7 +178,10 @@ class _PostCardState extends State<PostCard> {
                     : const Icon(Icons.favorite_border),
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (ctx) => CommentsScreen(
+                            postId: widget.snap['postId'].toString(),
+                          ))),
                   icon: const Icon(
                     Icons.comment_outlined,
                   )),
@@ -211,15 +237,24 @@ class _PostCardState extends State<PostCard> {
                           ]),
                     ),
                   ),
-                  Container(
-                    child: const Text(
-                      'View all 233 comments',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: secondaryColor,
+                  InkWell(
+                    child: Container(
+                      child: Text(
+                        'View all $commentLen comments',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: secondaryColor,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                    ),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(
+                          postId: widget.snap['postId'].toString(),
+                        ),
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 4),
                   ),
                   Container(
                     child: Text(

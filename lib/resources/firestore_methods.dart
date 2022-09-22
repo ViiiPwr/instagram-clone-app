@@ -49,4 +49,33 @@ class FirestoreMethods {
     }
     return res;
   }
+
+  Future<String> postComments(
+      String postId, String text, String uid, String username) async {
+    String res = "some err occurred";
+
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+        _firestore
+            .collection('posts')
+            .doc(postId)
+            .collection('comments')
+            .doc(commentId)
+            .set({
+          'profilePic':
+              'https://s3.amazonaws.com/sfc-datebook-wordpress/wp-content/uploads/sites/2/2019/02/64834262_DATEBOOK_seyrig0310-1024x695.jpg',
+          'username': username,
+          'uid': uid,
+          'text': text,
+          'commentId': commentId,
+          'datePublished': DateTime.now(),
+        });
+        res = "success";
+      }
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
 }
