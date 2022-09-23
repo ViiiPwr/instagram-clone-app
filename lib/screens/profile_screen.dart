@@ -72,34 +72,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          FirebaseAuth.instance.currentUser!.uid == widget.uid
-                              ? FollowButton(
-                                  function: () async {
-                                    await AuthMethods().signOut();
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen(),
-                                      ),
-                                    );
-                                  },
-                                  backgroundColor: mobileBackgroundColor,
-                                  borderColor: Colors.grey,
-                                  text: 'Sign out',
-                                  textColor: primaryColor)
-                              : isFollowing
-                                  ? FollowButton(
-                                      function: () {},
-                                      backgroundColor: Colors.white,
-                                      borderColor: Colors.grey,
-                                      text: 'Unfollow',
-                                      textColor: Colors.black)
-                                  : FollowButton(
-                                      function: () {},
-                                      backgroundColor: Colors.blue,
-                                      borderColor: Colors.blue,
-                                      text: 'Follow',
-                                      textColor: Colors.white)
+                          // FirebaseAuth.instance.currentUser!.uid == widget.uid ?
+                          FollowButton(
+                              function: () async {
+                                await AuthMethods().signOut();
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+                              },
+                              backgroundColor: mobileBackgroundColor,
+                              borderColor: Colors.grey,
+                              text: 'Sign out',
+                              textColor: primaryColor)
+                          // : isFollowing
+                          //     ? FollowButton(
+                          //         function: () {},
+                          //         backgroundColor: Colors.white,
+                          //         borderColor: Colors.grey,
+                          //         text: 'Unfollow',
+                          //         textColor: Colors.black)
+                          //     : FollowButton(
+                          //         function: () {},
+                          //         backgroundColor: Colors.blue,
+                          //         borderColor: Colors.blue,
+                          //         text: 'Follow',
+                          //         textColor: Colors.white)
                         ],
                       ),
                       Container(
