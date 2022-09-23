@@ -66,10 +66,10 @@ class _PostCardState extends State<PostCard> {
                 .copyWith(right: 0),
             child: Row(
               children: <Widget>[
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
-                      'http://picsum.photos/seed/$randomInt/300/300'),
+                      'https://images.complex.com/complex/images/c_fill,dpr_2.0,f_auto,q_auto,w_1400/fl_lossy,pg_1/pnp_FrankOceanReview_aqgxvz/frank-ocean-review-blond?fimg-ssr'),
                 ),
                 Expanded(
                     child: Padding(
@@ -139,7 +139,7 @@ class _PostCardState extends State<PostCard> {
                   height: width * 0.7,
                   width: double.infinity,
                   child: Image.network(
-                    'http://picsum.photos/seed/$randomInt2/300/300',
+                    'https://images.complex.com/complex/images/c_fill,dpr_2.0,f_auto,q_auto,w_1400/fl_lossy,pg_1/pnp_FrankOceanReview_aqgxvz/frank-ocean-review-blond?fimg-ssr',
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:instagram_app/utils/colors.dart';
 import 'package:instagram_app/utils/utils.dart';
 
+import '../resources/auth_methods.dart';
 import '../widgets/follow_button.dart';
+import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid; //current App user
@@ -72,7 +74,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           FirebaseAuth.instance.currentUser!.uid == widget.uid
                               ? FollowButton(
-                                  function: () {},
+                                  function: () async {
+                                    await AuthMethods().signOut();
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen(),
+                                      ),
+                                    );
+                                  },
                                   backgroundColor: mobileBackgroundColor,
                                   borderColor: Colors.grey,
                                   text: 'Sign out',
